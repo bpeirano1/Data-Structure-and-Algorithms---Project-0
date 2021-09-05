@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "station.h"
+#include "platform.h"
+#include "passenger.h"
+
+
 /* Retorna true si ambos strings son iguales */
 bool string_equals(char *string1, char *string2)
 {
@@ -44,15 +49,25 @@ int main(int argc, char **argv)
   int N_STATIONS;
   fscanf(input_file, "%d", &N_STATIONS);
 
+  //Creo las estaciones
+  Station** stations = stations_init(N_STATIONS);
+  
   int N_PLATFORMS;
   for (int s = 0; s < N_STATIONS; s++)
   {
     fscanf(input_file, "%d", &N_PLATFORMS);
     /*  [Por implementar] Creamos los andenes con la cantidad de andenes dada */
 
+    Platform** platforms = platforms_init(N_PLATFORMS);
+    stations[s] -> n_platform = N_PLATFORMS;
+    stations[s] -> platforms=platforms;
+  };
 
-  }
+  //Ahora creamos un contador para los pasajeros: 
+  int passengers_count = 0;
+  List_Passengers* list_passengers = list_passengers_init();
 
+  stations_print(stations, N_STATIONS);
   /* String para guardar la instrucción actual*/
   char command[32];
 
@@ -78,8 +93,8 @@ int main(int argc, char **argv)
     {
       int station_id, platform_id, destination, category;
       fscanf(input_file, "%d %d %d %d", &station_id, &platform_id, &destination, &category);
-
-
+      list_passengers_append(list_passengers, passengers_count,destination,category);
+      passengers_count++;
     }
     else if (string_equals(command, "REMOVER"))
     {
@@ -129,6 +144,10 @@ int main(int argc, char **argv)
   /*  [Por implementar] Liberamos nuestras estructuras */
   fclose(input_file);
   fclose(output_file);
+
+  list_passengers_print(list_passengers);
+
+  stations_free(stations,N_STATIONS);
 
   return 0;
 }
