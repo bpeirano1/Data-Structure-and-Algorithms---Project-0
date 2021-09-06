@@ -10,10 +10,13 @@ Platform** platforms_init(int NPlatform)
     for (int id=0; id<NPlatform; id++){
 
     Platform* platform = calloc(1,sizeof(Platform));
+    List_Passengers* passengers_queue = list_passengers_init();
 
     *platform = (Platform) 
     {
         .id = id,
+        .passengers_queue = passengers_queue,
+        .train = NULL
     };
 
     platforms[id]=platform;
@@ -26,7 +29,8 @@ Platform** platforms_init(int NPlatform)
 
 void platforms_print(Platform** self, int NPlatform){
     for (int id=0; id<NPlatform; id++){
-        printf("Anden %d\n",self[id]->id);
+        printf("-Anden %d\n",self[id]->id);
+        train_print(self[id]->train);
     };
 };
 

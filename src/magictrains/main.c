@@ -6,6 +6,8 @@
 #include "station.h"
 #include "platform.h"
 #include "passenger.h"
+#include "train.h"
+
 
 
 /* Retorna true si ambos strings son iguales */
@@ -65,9 +67,9 @@ int main(int argc, char **argv)
 
   //Ahora creamos un contador para los pasajeros: 
   int passengers_count = 0;
+  int trains_count = 0;
   List_Passengers* list_passengers = list_passengers_init();
 
-  stations_print(stations, N_STATIONS);
   /* String para guardar la instrucción actual*/
   char command[32];
 
@@ -82,10 +84,23 @@ int main(int argc, char **argv)
     {
       int station_id, platform_id, length, seats;
       fscanf(input_file, "%d %d %d", &station_id, &platform_id, &length);
+
+      Train* new_train = train_init(trains_count, station_id, platform_id, length);
+      trains_count++;
+
       for (int l = 0; l < length; l++)
       {
         fscanf(input_file, "%d", &seats);
+        list_wagons_append(new_train->wagons, seats);
       }
+      stations[station_id]->platforms[platform_id]->train = new_train;
+      // printf("Estacion %d y Anden %d\n", station_id,platform_id);
+      // printf("El Nuevo tren es T%d\n",stations[station_id]->platforms[platform_id]->train->id);
+      // printf("La cantidad de vagones del tren es: %d\n",stations[station_id]->platforms[platform_id]->train->n_wagons);
+      // for(Wagon* current = stations[station_id]->platforms[platform_id]->train->wagons -> head; current; current = current -> next)
+      // {
+      //   printf("wagon capacity: %i \n", current -> capacity);
+      // }
 
 
     }
@@ -145,7 +160,16 @@ int main(int argc, char **argv)
   fclose(input_file);
   fclose(output_file);
 
-  list_passengers_print(list_passengers);
+  printf("Estacion %d y Anden %d\n", 1,0);
+      printf("El Nuevo tren es T%d\n",stations[1]->platforms[0]->train->id);
+      printf("La cantidad de vagones del tren es: %d\n",stations[1]->platforms[0]->train->n_wagons);
+      for(Wagon* current = stations[1]->platforms[0]->train->wagons -> head; current; current = current -> next)
+      {
+        printf("wagon capacity: %i \n", current -> capacity);
+      }
+
+  // list_passengers_print(list_passengers);
+  // stations_print(stations, N_STATIONS);
 
   stations_free(stations,N_STATIONS);
 

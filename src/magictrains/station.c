@@ -14,7 +14,7 @@ Station** stations_init(int NStation)
     *station = (Station) 
     {
         .id = id,
-        .n_platform = NULL,
+        .n_platform = 0,
         .platforms = NULL
     };
 
@@ -30,7 +30,7 @@ void stations_print(Station** self, int NStation){
     for (int id=0; id<NStation; id++){
         printf("Estacion %d\n",self[id]->id);
         for (int j=0; j<self[id]->n_platform;j++){
-            printf("Anden %d\n",self[id]->platforms[j]->id);
+            platforms_print(self[id]->platforms, self[id]->n_platform);
         };
     };
 };

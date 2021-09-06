@@ -1,12 +1,13 @@
-#include "passenger.h"
+#include "wagon.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 
+
 /** Inicializa una lista vacía */
-List_Passengers* list_passengers_init()
+List_Wagons* list_wagons_init()
 {
-  List_Passengers* list = calloc(1,sizeof(List_Passengers));
+  List_Wagons* list = calloc(1,sizeof(List_Wagons));
   list -> head = NULL;
   list -> tail = NULL;
 
@@ -14,12 +15,15 @@ List_Passengers* list_passengers_init()
 }
 
 /** Inserta un nuevo elemento al final de la lista */
-void list_passengers_append(List_Passengers* list, int id, int destiny, int category)
+void list_wagons_append(List_Wagons* list, int capacity)
 {
-  Passenger* node = calloc(1,sizeof(Passenger));
-  node -> id = id;
-  node -> destiny = destiny;
-  node -> category = category;
+  
+  Wagon* node = calloc(1,sizeof(Wagon));
+  Passenger** wagon_seats = calloc(capacity,sizeof(Passenger*));
+
+  node -> capacity = capacity;
+  node -> busy_seats = 0;
+  node -> seats = wagon_seats;
   node -> next = NULL;
   node -> prev = NULL;
 
@@ -38,23 +42,22 @@ void list_passengers_append(List_Passengers* list, int id, int destiny, int cate
   list -> tail = node;
 }
 
-/** Imprime todos los elementos de la lista */
-void list_passengers_print(List_Passengers* list)
+void list_wagons_print(List_Wagons* list)
 {
-  for(Passenger* current = list -> head; current; current = current -> next)
+  for(Wagon* current = list -> head; current; current = current -> next)
   {
-    printf("passenger: %i-%i\n", current -> id, current->destiny);
+    printf("wagon capacity: %i | ", current -> capacity);
   }
 }
 
 /** Libera todos los recursos asociados a esta lista */
-void list_passengers_destroy(List_Passengers* list)
+void list_wagons_destroy(List_Wagons* list)
 {
   // Liberamos los nodos
   if(list -> head)
   {
-    Passenger* curr = list -> head -> next;
-    Passenger* prev = list -> head;
+    Wagon* curr = list -> head -> next;
+    Wagon* prev = list -> head;
 
     while(curr)
     {
