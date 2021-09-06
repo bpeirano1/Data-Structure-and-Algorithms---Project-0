@@ -12,7 +12,8 @@ typedef struct platform Platform;
 
 struct platform {
     int id;
-    List_Passengers* passengers_queue;
+    List_Passengers* passengers_queue_normal;
+    List_Passengers* passengers_queue_premium;
     Train* train;
 };
 
@@ -21,5 +22,7 @@ Platform** platforms_init(int NPlatform);
 
 // Para imprimir el array
 void platforms_print(Platform** self, int NPlatform);
+
+void passengers_queue_print(List_Passengers* list);
 
 void platforms_free(Platform** self, int NPlatform);

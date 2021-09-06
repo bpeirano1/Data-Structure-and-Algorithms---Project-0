@@ -16,6 +16,8 @@ struct train {
     int n_platform;
     int n_wagons;
     List_Wagons* wagons;
+    int total_capacity;
+    int total_busy_seats;
 
 };
 

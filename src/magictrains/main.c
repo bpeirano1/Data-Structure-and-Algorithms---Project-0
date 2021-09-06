@@ -88,26 +88,37 @@ int main(int argc, char **argv)
       Train* new_train = train_init(trains_count, station_id, platform_id, length);
       trains_count++;
 
+      int total_train_capacity = 0;
+
       for (int l = 0; l < length; l++)
       {
         fscanf(input_file, "%d", &seats);
+        total_train_capacity+=seats;
         list_wagons_append(new_train->wagons, seats);
       }
+      new_train->total_capacity = total_train_capacity;
       stations[station_id]->platforms[platform_id]->train = new_train;
-      // printf("Estacion %d y Anden %d\n", station_id,platform_id);
-      // printf("El Nuevo tren es T%d\n",stations[station_id]->platforms[platform_id]->train->id);
-      // printf("La cantidad de vagones del tren es: %d\n",stations[station_id]->platforms[platform_id]->train->n_wagons);
-      // for(Wagon* current = stations[station_id]->platforms[platform_id]->train->wagons -> head; current; current = current -> next)
-      // {
-      //   printf("wagon capacity: %i \n", current -> capacity);
-      // }
-
 
     }
     else if (string_equals(command, "PASAJERO"))
     {
       int station_id, platform_id, destination, category;
       fscanf(input_file, "%d %d %d %d", &station_id, &platform_id, &destination, &category);
+      Platform* platform_selected = stations[station_id]->platforms[platform_id];
+      if (!platform_selected->train){
+        if (category==0)
+        {
+          list_passengers_append(platform_selected->passengers_queue_premium,passengers_count,destination,category);
+        }
+        else
+        {
+          list_passengers_append(platform_selected->passengers_queue_normal,passengers_count,destination,category);
+        };
+        
+
+      };
+
+
       list_passengers_append(list_passengers, passengers_count,destination,category);
       passengers_count++;
     }
@@ -148,6 +159,7 @@ int main(int argc, char **argv)
     {
       int station_id;
       fscanf(input_file, "%d", &station_id);
+      station_print(stations[station_id]);
 
 
     }
@@ -155,21 +167,33 @@ int main(int argc, char **argv)
     /* Leemos la siguiente instrucción */
     fscanf(input_file, "%s", command);
   }
+  //imprimir todas las estaciones al final
+  all_stations_print(stations, N_STATIONS);
 
   /*  [Por implementar] Liberamos nuestras estructuras */
   fclose(input_file);
   fclose(output_file);
 
-  printf("Estacion %d y Anden %d\n", 1,0);
-      printf("El Nuevo tren es T%d\n",stations[1]->platforms[0]->train->id);
-      printf("La cantidad de vagones del tren es: %d\n",stations[1]->platforms[0]->train->n_wagons);
-      for(Wagon* current = stations[1]->platforms[0]->train->wagons -> head; current; current = current -> next)
-      {
-        printf("wagon capacity: %i \n", current -> capacity);
-      }
+  // printf("Estacion %d y Anden %d\n", 1,0);
+  //     printf("El Nuevo tren es T%d\n",stations[1]->platforms[0]->train->id);
+  //     printf("La cantidad de vagones del tren es: %d\n",stations[1]->platforms[0]->train->n_wagons);
+  //     for(Wagon* current = stations[1]->platforms[0]->train->wagons -> head; current; current = current -> next)
+  //     {
+  //       printf("wagon capacity: %i \n", current -> capacity);
+  //       for (int h=0; h<current->capacity; h++){
+  //         if (!current->seats[h])
+  //         {
+  //           printf("Asiento: %s\n", current->seats[h]);
+  //         };
+          
+          
+  //       };
+  //     }
 
   // list_passengers_print(list_passengers);
   // stations_print(stations, N_STATIONS);
+  
+  
 
   stations_free(stations,N_STATIONS);
 

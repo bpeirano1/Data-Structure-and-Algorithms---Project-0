@@ -26,14 +26,18 @@ Station** stations_init(int NStation)
     
 };
 
-void stations_print(Station** self, int NStation){
+void all_stations_print(Station** self, int NStation){
     for (int id=0; id<NStation; id++){
-        printf("Estacion %d\n",self[id]->id);
-        for (int j=0; j<self[id]->n_platform;j++){
-            platforms_print(self[id]->platforms, self[id]->n_platform);
+        station_print(self[id]);
         };
     };
+    
+void station_print(Station* self){
+    printf("ESTACION %d\n", self->id);
+    platforms_print(self->platforms,self->n_platform);
+
 };
+
 void stations_free(Station** self, int NStation){
     for (int id=0; id<NStation; id++){
         platforms_free(self[id]->platforms,self[id]->n_platform);

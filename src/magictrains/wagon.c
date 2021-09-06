@@ -46,10 +46,22 @@ void list_wagons_print(List_Wagons* list)
 {
   for(Wagon* current = list -> head; current; current = current -> next)
   {
-    printf("wagon capacity: %i | ", current -> capacity);
-  }
+    wagon_seats_print(current->seats, current -> capacity);
+    printf(" |");
+  };
 }
 
+void wagon_seats_print(Passenger** seats, int length_seats){
+  for (int i=0; i<length_seats; i++){
+    if (seats[i]){
+      printf(" %d-%d",seats[i]->id,seats[i]->destiny);
+    }
+    else {
+      printf(" X");
+    };
+    
+  }
+}
 /** Libera todos los recursos asociados a esta lista */
 void list_wagons_destroy(List_Wagons* list)
 {
@@ -70,3 +82,5 @@ void list_wagons_destroy(List_Wagons* list)
   // Liberamos la lista en si
   free(list);
 };
+
+

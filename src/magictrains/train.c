@@ -12,14 +12,16 @@ Train* train_init(int id, int n_station, int n_platform, int n_wagons){
         .n_station = n_station,
         .n_platform = n_platform,
         .n_wagons = n_wagons,
-        .wagons = list_wagons
+        .wagons = list_wagons,
+        .total_capacity = 0,
+        .total_busy_seats = 0
     };
 
     return train;
 };
 
 void train_print(Train* self){
-    printf("--T%d | Cantidad de vagones: %d | ",self->id, self -> n_wagons);
+    printf("T%d |",self->id);
     list_wagons_print(self->wagons);
     printf("\n");
 };
