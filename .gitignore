@@ -1,2 +1,4 @@
 Tests_T0/
 run.sh
+run_diff.sh
+out/

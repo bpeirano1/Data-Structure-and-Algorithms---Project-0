@@ -42,22 +42,22 @@ void list_wagons_append(List_Wagons* list, int capacity)
   list -> tail = node;
 }
 
-void list_wagons_print(List_Wagons* list)
+void list_wagons_print(List_Wagons* list, FILE* output_file)
 {
   for(Wagon* current = list -> head; current; current = current -> next)
   {
-    wagon_seats_print(current->seats, current -> capacity);
-    printf(" |");
+    wagon_seats_print(current->seats, current -> capacity, output_file);
+    fprintf(output_file," |");
   };
 }
 
-void wagon_seats_print(Passenger** seats, int length_seats){
+void wagon_seats_print(Passenger** seats, int length_seats, FILE* output_file){
   for (int i=0; i<length_seats; i++){
     if (seats[i]){
-      printf(" %d-%d",seats[i]->id,seats[i]->destiny);
+      fprintf(output_file," %d-%d",seats[i]->id,seats[i]->destiny);
     }
     else {
-      printf(" X");
+      fprintf(output_file," X");
     };
     
   }

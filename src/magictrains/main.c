@@ -159,7 +159,7 @@ int main(int argc, char **argv)
     {
       int station_id;
       fscanf(input_file, "%d", &station_id);
-      station_print(stations[station_id]);
+      station_print(stations[station_id], output_file);
 
 
     }
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
     fscanf(input_file, "%s", command);
   }
   //imprimir todas las estaciones al final
-  all_stations_print(stations, N_STATIONS);
+  all_stations_print(stations, N_STATIONS, output_file);
 
   /*  [Por implementar] Liberamos nuestras estructuras */
   fclose(input_file);

@@ -42,3 +42,5 @@ void list_passengers_append(List_Passengers* list, int id, int destiny, int cate
 void list_passengers_print(List_Passengers* list);
 /** Libera todos los recursos asociados a esta lista */
 void list_passengers_destroy(List_Passengers* list);
+// list para poder
+Passenger* list_passenger_pop(List_Passengers* list);

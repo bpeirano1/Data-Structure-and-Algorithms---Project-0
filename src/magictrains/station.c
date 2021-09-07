@@ -26,15 +26,15 @@ Station** stations_init(int NStation)
     
 };
 
-void all_stations_print(Station** self, int NStation){
+void all_stations_print(Station** self, int NStation, FILE* output_file){
     for (int id=0; id<NStation; id++){
-        station_print(self[id]);
+        station_print(self[id], output_file);
         };
     };
-    
-void station_print(Station* self){
-    printf("ESTACION %d\n", self->id);
-    platforms_print(self->platforms,self->n_platform);
+
+void station_print(Station* self, FILE* output_file){
+    fprintf(output_file,"ESTACION %d\n", self->id);
+    platforms_print(self->platforms,self->n_platform, output_file);
 
 };
 

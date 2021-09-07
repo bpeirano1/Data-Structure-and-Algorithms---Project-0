@@ -47,7 +47,7 @@ List_Wagons* list_wagons_init();
 /** Inserta un nuevo elemento al final de la lista */
 void list_wagons_append(List_Wagons* list, int capacity);
 /** Imprime todos los elementos de la lista */
-void list_wagons_print(List_Wagons* list);
+void list_wagons_print(List_Wagons* list, FILE* output_file);
 // /** Libera todos los recursos asociados a esta lista */
-void wagon_seats_print(Passenger** seats, int length_seats);
+void wagon_seats_print(Passenger** seats, int length_seats, FILE* output_file);
 void list_wagons_destroy(List_Wagons* list);

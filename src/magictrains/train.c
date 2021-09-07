@@ -20,10 +20,10 @@ Train* train_init(int id, int n_station, int n_platform, int n_wagons){
     return train;
 };
 
-void train_print(Train* self){
-    printf("T%d |",self->id);
-    list_wagons_print(self->wagons);
-    printf("\n");
+void train_print(Train* self, FILE* output_file){
+    fprintf(output_file,"T%d |",self->id);
+    list_wagons_print(self->wagons, output_file);
+    fprintf(output_file,"\n");
 };
 
 // Para liberar memoria

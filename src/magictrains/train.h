@@ -25,7 +25,7 @@ struct train {
 Train* train_init(int id, int n_station, int n_platform, int n_wagons);
 
 // Para imprimir el array
-void train_print(Train* self);
+void train_print(Train* self, FILE* output_file);
 
 // Para liberar memoria
 void train_free(Train* self);
