@@ -30,3 +30,28 @@ void train_print(Train* self, FILE* output_file){
 void train_free(Train* self){
     free(self);
 };
+
+void train_add_passenger(Train* train, Passenger* passenger){
+    if (train->total_busy_seats < train->total_capacity){
+        int asiento_encontrado=0;
+        int wagon_count = 0;
+
+        Wagon* current = train->wagons->head;
+        while (!asiento_encontrado && wagon_count < train->n_wagons)
+        {
+            if(current->busy_seats < current->capacity){
+                wagon_add_person(current,passenger);
+                asiento_encontrado = 1;
+                train->total_busy_seats += 1;
+            };
+            current = current->next;
+            wagon_count++;
+
+        };
+        if(!asiento_encontrado){
+            printf("Error no se encontro asiento, cuando deberían haber disponible");
+        };
+        
+    };
+    
+};

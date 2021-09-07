@@ -29,3 +29,5 @@ void train_print(Train* self, FILE* output_file);
 
 // Para liberar memoria
 void train_free(Train* self);
+
+void train_add_passenger(Train* train, Passenger* passenger);

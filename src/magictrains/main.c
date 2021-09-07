@@ -68,7 +68,6 @@ int main(int argc, char **argv)
   //Ahora creamos un contador para los pasajeros: 
   int passengers_count = 0;
   int trains_count = 0;
-  List_Passengers* list_passengers = list_passengers_init();
 
   /* String para guardar la instrucción actual*/
   char command[32];
@@ -99,6 +98,15 @@ int main(int argc, char **argv)
       new_train->total_capacity = total_train_capacity;
       stations[station_id]->platforms[platform_id]->train = new_train;
 
+      List_Passengers* passengers_queue_premium = stations[station_id]->platforms[platform_id]->passengers_queue_premium;
+
+      while (passengers_queue_premium->head && new_train->total_busy_seats<new_train->total_capacity)
+      {
+        Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
+        train_add_passenger(new_train, passenger_pop);
+      }
+      
+
     }
     else if (string_equals(command, "PASAJERO"))
     {
@@ -114,18 +122,64 @@ int main(int argc, char **argv)
         {
           list_passengers_append(platform_selected->passengers_queue_normal,passengers_count,destination,category);
         };
-        
+      }
+      else if(platform_selected->train) {
+        if(category==0){
+          if(platform_selected->train->total_busy_seats < platform_selected->train->total_capacity){
+            Passenger* passenger_new = calloc(1,sizeof(Passenger));
+            passenger_new -> id = passengers_count;
+            passenger_new -> destiny = destination;
+            passenger_new -> category = category;
+            passenger_new -> next = NULL;
+            train_add_passenger(platform_selected->train, passenger_new);
+          } else {
+            list_passengers_append(platform_selected->passengers_queue_premium,passengers_count,destination,category);
+          };
+        }
+        else if (category==1){
 
-      };
+          list_passengers_append(platform_selected->passengers_queue_normal,passengers_count,destination,category);
 
+        }
+      }
 
-      list_passengers_append(list_passengers, passengers_count,destination,category);
       passengers_count++;
     }
     else if (string_equals(command, "REMOVER"))
     {
       int station_id, platform_id, car, seat;
       fscanf(input_file, "%d %d %d %d", &station_id, &platform_id, &car, &seat);
+
+      Train* train_selected = stations[station_id]->platforms[platform_id]->train;
+      Wagon* current = train_selected->wagons->head;
+      for (int i = 1; i < car; i++)
+      {
+        current = current->next;
+      }
+      if (current->seats[seat]){
+        Passenger* passenger_removed = current->seats[seat];
+        current->seats[seat] = NULL;
+        current->busy_seats -= 1 ;
+        train_selected->total_busy_seats -=1;
+        fprintf(output_file,"REMOVER %d %d\n",passenger_removed->id,passenger_removed->destiny);
+        free(passenger_removed);
+
+        List_Passengers* passengers_queue_premium =stations[station_id]->platforms[platform_id]->passengers_queue_premium;
+
+        while (passengers_queue_premium->head && train_selected->total_busy_seats<train_selected->total_capacity)
+        {
+          Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
+          train_add_passenger(train_selected, passenger_pop);
+        }
+
+      }
+      else{
+        printf("No hay una personan en el asiento a remover en el caso REMOVER %d %d %d %d",station_id, platform_id, car, seat);
+      }
+      
+
+
+
 
 
     }

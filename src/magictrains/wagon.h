@@ -22,7 +22,7 @@ struct wagon
   Passenger** seats; 
   /** Un puntero al siguiente nodo de la lista */
   Wagon* next;
-  Wagon* prev;
+  // Wagon* prev;
 };
 
 
@@ -51,3 +51,5 @@ void list_wagons_print(List_Wagons* list, FILE* output_file);
 // /** Libera todos los recursos asociados a esta lista */
 void wagon_seats_print(Passenger** seats, int length_seats, FILE* output_file);
 void list_wagons_destroy(List_Wagons* list);
+
+void wagon_add_person(Wagon* wagon ,Passenger* passenger);

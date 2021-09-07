@@ -25,7 +25,7 @@ void list_wagons_append(List_Wagons* list, int capacity)
   node -> busy_seats = 0;
   node -> seats = wagon_seats;
   node -> next = NULL;
-  node -> prev = NULL;
+  // node -> prev = NULL;
 
   // Si la lista está vacía entonces queda como el primer elemento
   if(list -> head == NULL)
@@ -36,7 +36,7 @@ void list_wagons_append(List_Wagons* list, int capacity)
   else
   {
     list -> tail -> next = node;
-    node -> prev = list -> tail;
+    // node -> prev = list -> tail;
   }
   // Luego se deja a este nodo como el último
   list -> tail = node;
@@ -84,3 +84,18 @@ void list_wagons_destroy(List_Wagons* list)
 };
 
 
+void wagon_add_person(Wagon* wagon ,Passenger* passenger){
+
+  int asiento_encontrado = 0;
+
+  for (int i=0; i < wagon -> capacity; i++){
+    if (!wagon->seats[i] && !asiento_encontrado){
+      wagon->seats[i] = passenger;
+      asiento_encontrado = 1;
+      wagon->busy_seats += 1;
+      return;  
+    };
+  };
+  printf("Error agregando persona al vagon pasajero: %d-%d-%d\n", passenger->id,passenger->destiny,passenger->category);
+  
+};
