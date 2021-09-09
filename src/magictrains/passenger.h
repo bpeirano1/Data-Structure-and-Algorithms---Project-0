@@ -13,6 +13,7 @@ struct passenger
   int id;
   int destiny;
   int category;
+  int in_seat;
   /** Un puntero al siguiente nodo de la lista */
   Passenger* next;
 

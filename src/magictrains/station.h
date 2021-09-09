@@ -20,9 +20,9 @@ struct station {
 Station** stations_init(int NStation);
 
 // Para imprimir el array
-void all_stations_print(Station** self, int NStation, FILE* output_file);
+void all_stations_fprint(Station** self, int NStation, FILE* output_file);
 
-void station_print(Station* self, FILE* output_file);
+void station_fprint(Station* self, FILE* output_file);
 
 // Para liberar memoria
 void stations_free(Station** self, int NStation);

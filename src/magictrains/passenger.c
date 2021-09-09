@@ -1,6 +1,7 @@
 #include "passenger.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 
 /** Inicializa una lista vacía */
@@ -20,7 +21,9 @@ void list_passengers_append(List_Passengers* list, int id, int destiny, int cate
   node -> id = id;
   node -> destiny = destiny;
   node -> category = category;
+  node ->in_seat = 0;
   node -> next = NULL;
+
 
 
   // Si la lista está vacía entonces queda como el primer elemento

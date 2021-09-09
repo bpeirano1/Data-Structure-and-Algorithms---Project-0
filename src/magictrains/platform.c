@@ -29,19 +29,19 @@ Platform** platforms_init(int NPlatform)
     
 };
 
-void platforms_print(Platform** self, int NPlatform, FILE* output_file){
+void platforms_fprint(Platform** self, int NPlatform, FILE* output_file){
     for (int id=0; id<NPlatform; id++){
         fprintf(output_file,"A%d",self[id]->id);
-        passengers_queue_print(self[id]->passengers_queue_premium, output_file);
-        passengers_queue_print(self[id]->passengers_queue_normal, output_file);
+        passengers_queue_fprint(self[id]->passengers_queue_premium, output_file);
+        passengers_queue_fprint(self[id]->passengers_queue_normal, output_file);
         fprintf(output_file,"\n");
         if (self[id]->train)
         {
-            train_print(self[id]->train,output_file);
+            train_fprint(self[id]->train,output_file);
         }; 
     };
 };
-void passengers_queue_print(List_Passengers* list, FILE* output_file){
+void passengers_queue_fprint(List_Passengers* list, FILE* output_file){
     for(Passenger* current = list -> head; current; current = current -> next)
   {
     fprintf(output_file," %d-%d-%d", current -> id, current->destiny, current->category);

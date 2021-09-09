@@ -21,8 +21,8 @@ struct platform {
 Platform** platforms_init(int NPlatform);
 
 // Para imprimir el array
-void platforms_print(Platform** self, int NPlatform, FILE* output_file);
+void platforms_fprint(Platform** self, int NPlatform, FILE* output_file);
 
-void passengers_queue_print(List_Passengers* list, FILE* output_file);
+void passengers_queue_fprint(List_Passengers* list, FILE* output_file);
 
 void platforms_free(Platform** self, int NPlatform);

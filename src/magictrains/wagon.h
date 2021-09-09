@@ -22,6 +22,7 @@ struct wagon
   Passenger** seats; 
   /** Un puntero al siguiente nodo de la lista */
   Wagon* next;
+  int id;
   // Wagon* prev;
 };
 
@@ -45,11 +46,16 @@ struct linked_list_wagons
 /** Inicializa una lista vacía */
 List_Wagons* list_wagons_init();
 /** Inserta un nuevo elemento al final de la lista */
-void list_wagons_append(List_Wagons* list, int capacity);
+void list_wagons_append(List_Wagons* list, int capacity, int id);
 /** Imprime todos los elementos de la lista */
-void list_wagons_print(List_Wagons* list, FILE* output_file);
+void list_wagons_fprint(List_Wagons* list, FILE* output_file);
 // /** Libera todos los recursos asociados a esta lista */
-void wagon_seats_print(Passenger** seats, int length_seats, FILE* output_file);
+void wagon_seats_fprint(Passenger** seats, int length_seats, FILE* output_file);
+
+void list_wagons_print(List_Wagons* list);
+
+void wagon_seats_print(Passenger** seats, int length_seats);
+
 void list_wagons_destroy(List_Wagons* list);
 
-void wagon_add_person(Wagon* wagon ,Passenger* passenger);
+void wagon_add_person(Wagon* wagon ,Passenger* passenger, int train_id);

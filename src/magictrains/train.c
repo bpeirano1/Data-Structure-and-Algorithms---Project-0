@@ -20,10 +20,15 @@ Train* train_init(int id, int n_station, int n_platform, int n_wagons){
     return train;
 };
 
-void train_print(Train* self, FILE* output_file){
+void train_fprint(Train* self, FILE* output_file){
     fprintf(output_file,"T%d |",self->id);
-    list_wagons_print(self->wagons, output_file);
+    list_wagons_fprint(self->wagons, output_file);
     fprintf(output_file,"\n");
+};
+void train_print(Train* self){
+    printf("T%d |",self->id);
+    list_wagons_print(self->wagons);
+    printf("\n");
 };
 
 // Para liberar memoria
@@ -40,7 +45,7 @@ void train_add_passenger(Train* train, Passenger* passenger){
         while (!asiento_encontrado && wagon_count < train->n_wagons)
         {
             if(current->busy_seats < current->capacity){
-                wagon_add_person(current,passenger);
+                wagon_add_person(current,passenger,train->id);
                 asiento_encontrado = 1;
                 train->total_busy_seats += 1;
             };
@@ -49,9 +54,9 @@ void train_add_passenger(Train* train, Passenger* passenger){
 
         };
         if(!asiento_encontrado){
+            
             printf("Error no se encontro asiento, cuando deberían haber disponible");
         };
-        
     };
     
 };

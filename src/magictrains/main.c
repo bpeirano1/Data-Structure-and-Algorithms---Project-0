@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     stations[s] -> platforms=platforms;
   };
 
-  //Ahora creamos un contador para los pasajeros: 
+  //Ahora creamos un contador para los pasajeros y trenes: 
   int passengers_count = 0;
   int trains_count = 0;
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
       {
         fscanf(input_file, "%d", &seats);
         total_train_capacity+=seats;
-        list_wagons_append(new_train->wagons, seats);
+        list_wagons_append(new_train->wagons, seats, l);
       }
       new_train->total_capacity = total_train_capacity;
       stations[station_id]->platforms[platform_id]->train = new_train;
@@ -141,6 +141,8 @@ int main(int argc, char **argv)
           list_passengers_append(platform_selected->passengers_queue_normal,passengers_count,destination,category);
 
         }
+      } else{
+        printf("Passanger nunca entra al flujo");
       }
 
       passengers_count++;
@@ -152,17 +154,26 @@ int main(int argc, char **argv)
 
       Train* train_selected = stations[station_id]->platforms[platform_id]->train;
       Wagon* current = train_selected->wagons->head;
-      for (int i = 1; i < car; i++)
+
+      for (int i = 1; i <= car; i++)
       {
         current = current->next;
       }
-      if (current->seats[seat]){
-        Passenger* passenger_removed = current->seats[seat];
-        current->seats[seat] = NULL;
+
+      if (current->seats[seat]->in_seat){
+        int passenger_removed_id = current->seats[seat]->id;
+        int passenger_removed_destiny = current->seats[seat]->destiny;
+        fprintf(output_file,"REMOVER %d %d\n",passenger_removed_id,passenger_removed_destiny);
+
+        current->seats[seat]->in_seat=0;
+        current->seats[seat]->id=0;
+        current->seats[seat]->destiny=0;
+        current->seats[seat]->category=0;
+        current->seats[seat]->next = NULL;
         current->busy_seats -= 1 ;
-        train_selected->total_busy_seats -=1;
-        fprintf(output_file,"REMOVER %d %d\n",passenger_removed->id,passenger_removed->destiny);
-        free(passenger_removed);
+        train_selected->total_busy_seats -= 1;
+  
+        // free(passenger_removed);
 
         List_Passengers* passengers_queue_premium =stations[station_id]->platforms[platform_id]->passengers_queue_premium;
 
@@ -174,14 +185,13 @@ int main(int argc, char **argv)
 
       }
       else{
-        printf("No hay una personan en el asiento a remover en el caso REMOVER %d %d %d %d",station_id, platform_id, car, seat);
-      }
-      
+        printf("No hay una personan en el asiento a remover en el caso REMOVER %d %d %d %d\n",station_id, platform_id, car, seat);
+        printf("Debuggeo Train: %i asientos ocupados tren: %i/%i , Vagon: %i asientos ocupados %i/%i,\n", train_selected->id,train_selected->total_busy_seats,train_selected->total_capacity,current->id,current->busy_seats,current->capacity);
+        train_print(train_selected);
+        printf("Antes de caerse 2\n");
 
-
-
-
-
+        // station_fprint(stations[station_id], output_file);
+    }
     }
     else if (string_equals(command, "SALIR"))
     {
@@ -213,7 +223,7 @@ int main(int argc, char **argv)
     {
       int station_id;
       fscanf(input_file, "%d", &station_id);
-      station_print(stations[station_id], output_file);
+      station_fprint(stations[station_id], output_file);
 
 
     }
@@ -222,7 +232,7 @@ int main(int argc, char **argv)
     fscanf(input_file, "%s", command);
   }
   //imprimir todas las estaciones al final
-  all_stations_print(stations, N_STATIONS, output_file);
+  all_stations_fprint(stations, N_STATIONS, output_file);
 
   /*  [Por implementar] Liberamos nuestras estructuras */
   fclose(input_file);
