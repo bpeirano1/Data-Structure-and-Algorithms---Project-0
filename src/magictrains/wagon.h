@@ -59,3 +59,5 @@ void wagon_seats_print(Passenger** seats, int length_seats);
 void list_wagons_destroy(List_Wagons* list);
 
 void wagon_add_person(Wagon* wagon ,Passenger* passenger, int train_id);
+void list_separated_wagons_append(List_Wagons* list, Wagon* node);
+void list_original_separated_destroy(List_Wagons* list);

@@ -1,9 +1,7 @@
 #include "wagon.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-
-
+#include <stdbool.h>
 
 /** Inicializa una lista vacía */
 List_Wagons* list_wagons_init()
@@ -136,3 +134,25 @@ void wagon_add_person(Wagon* wagon ,Passenger* passenger, int train_id){
   };
   printf("Error agregando persona al vagon pasajero: %d-%d-%d\n", passenger->id,passenger->destiny,passenger->category);
 };
+
+void list_separated_wagons_append(List_Wagons* list, Wagon* node)
+{
+  if(list -> head == NULL)
+  {
+    list -> head = node;
+  }
+  // Sino, se pone como el siguiente del ultimo
+  else
+  {
+    list -> tail -> next = node;
+    // node -> prev = list -> tail;
+  }
+  // Luego se deja a este nodo como el último
+  list -> tail = node;
+}
+
+void list_original_separated_destroy(List_Wagons* list){
+  list->head=NULL;
+  list->tail=NULL;
+  free(list);
+}

@@ -31,6 +31,42 @@ bool check_arguments(int argc, char **argv)
   return true;
 }
 
+void LLegar_function (FILE* output_file, Station** stations, Train* train, int station_id, int platform_id, List_Passengers* passengers_to_destroy){
+      fprintf(output_file,"LLEGAR ");
+      train_fprint(train, output_file);
+
+      for(Wagon* current = train->wagons-> head; current; current = current -> next)
+      {
+        for (int i = 0; i < current->capacity; i++)
+        {
+          if (current->seats[i]->in_seat && current->seats[i]->destiny == station_id)
+          {
+            current->seats[i]->in_seat=0;
+            current->seats[i]->id=0;
+            current->seats[i]->destiny=0;
+            current->seats[i]->category=0;
+            current->seats[i]->next = NULL;
+            current->busy_seats -= 1 ;
+            train->total_busy_seats -= 1;
+          }   
+        }        
+        };
+        List_Passengers* passengers_queue_premium = stations[station_id]->platforms[platform_id]->passengers_queue_premium;
+
+        while (passengers_queue_premium->head && train->total_busy_seats<train->total_capacity)
+        {
+          Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
+          train_add_passenger(train, passenger_pop);
+          list__errase_passengers_append(passengers_to_destroy, passenger_pop);
+          
+        }
+        train->n_station = station_id;
+        train->n_platform = platform_id;
+
+        stations[station_id]->platforms[platform_id]->train=train;
+
+}
+
 int main(int argc, char **argv)
 {
   /* Si los parámetros del programa son inválidos */
@@ -246,38 +282,40 @@ int main(int argc, char **argv)
     {
       int station_id, platform_id;
       fscanf(input_file, "%d %d", &station_id, &platform_id);
-      fprintf(output_file,"LLEGAR ");
-      train_fprint(train_traveling, output_file);
 
-      for(Wagon* current = train_traveling->wagons-> head; current; current = current -> next)
-      {
-        for (int i = 0; i < current->capacity; i++)
-        {
-          if (current->seats[i]->in_seat && current->seats[i]->destiny == station_id)
-          {
-            current->seats[i]->in_seat=0;
-            current->seats[i]->id=0;
-            current->seats[i]->destiny=0;
-            current->seats[i]->category=0;
-            current->seats[i]->next = NULL;
-            current->busy_seats -= 1 ;
-            train_traveling->total_busy_seats -= 1;
-          }   
-        }        
-        };
-        List_Passengers* passengers_queue_premium = stations[station_id]->platforms[platform_id]->passengers_queue_premium;
+      LLegar_function (output_file,stations,train_traveling,station_id,platform_id,passengers_to_destroy);
+      // fprintf(output_file,"LLEGAR ");
+      // train_fprint(train_traveling, output_file);
 
-        while (passengers_queue_premium->head && train_traveling->total_busy_seats<train_traveling->total_capacity)
-        {
-          Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
-          train_add_passenger(train_traveling, passenger_pop);
-          list__errase_passengers_append(passengers_to_destroy, passenger_pop);
+      // for(Wagon* current = train_traveling->wagons-> head; current; current = current -> next)
+      // {
+      //   for (int i = 0; i < current->capacity; i++)
+      //   {
+      //     if (current->seats[i]->in_seat && current->seats[i]->destiny == station_id)
+      //     {
+      //       current->seats[i]->in_seat=0;
+      //       current->seats[i]->id=0;
+      //       current->seats[i]->destiny=0;
+      //       current->seats[i]->category=0;
+      //       current->seats[i]->next = NULL;
+      //       current->busy_seats -= 1 ;
+      //       train_traveling->total_busy_seats -= 1;
+      //     }   
+      //   }        
+      //   };
+      //   List_Passengers* passengers_queue_premium = stations[station_id]->platforms[platform_id]->passengers_queue_premium;
+
+      //   while (passengers_queue_premium->head && train_traveling->total_busy_seats<train_traveling->total_capacity)
+      //   {
+      //     Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
+      //     train_add_passenger(train_traveling, passenger_pop);
+      //     list__errase_passengers_append(passengers_to_destroy, passenger_pop);
           
-        }
-        train_traveling->n_station = station_id;
-        train_traveling->n_platform = platform_id;
+      //   }
+      //   train_traveling->n_station = station_id;
+      //   train_traveling->n_platform = platform_id;
 
-        stations[station_id]->platforms[platform_id]->train=train_traveling;
+      //   stations[station_id]->platforms[platform_id]->train=train_traveling;
 
     }
     else if (string_equals(command, "DESAPARECER"))
@@ -285,6 +323,7 @@ int main(int argc, char **argv)
       fprintf(output_file,"DESAPARECER ");
       train_fprint(train_traveling, output_file);
       train_traveling = NULL;
+      // TENGO QUE LIBERAR ESTE TREN
 
 
     }
@@ -293,10 +332,82 @@ int main(int argc, char **argv)
       int station_id_1, platform_id_1, station_id_2, platform_id_2;
       fscanf(input_file, "%d %d %d %d", &station_id_1, &platform_id_1, &station_id_2, &platform_id_2);
 
-      // Train* new_train_separated = train_init(trains_count, station_id_2, platform_id_2, length);
-      // trains_count++;
+      // printf("TREN A SPERAR\n");
+      // train_print(train_traveling);
+
+      int length_train_separated_new =  train_traveling->n_wagons/2;
+      int length_train_separated_old = train_traveling->n_wagons - length_train_separated_new;
+
+      Train* new_train_separated = train_init(trains_count, station_id_2, platform_id_2,length_train_separated_new);
+      trains_count++;
+
+      train_traveling->n_wagons = length_train_separated_old;
+      train_traveling->n_station = station_id_1;
+      train_traveling->n_platform = platform_id_1;
+
+      List_Wagons* list_wagons_separated_old = list_wagons_init();
+      List_Wagons* list_wagons_separated_new = list_wagons_init();
+
+      int total_capacity_old_train = 0;
+      int total_capacity_new_train = 0;
+
+      int total_busy_seats_old_train = 0;
+      int total_busy_seats_new_train = 0;
+
+      
+      int counter = 0;
+      for(Wagon* current = train_traveling->wagons -> head; current; current = current -> next)
+      {
+        if(counter%2==0)
+        {
+          total_capacity_old_train += current->capacity;
+          total_busy_seats_old_train += current->busy_seats;
+          list_separated_wagons_append(list_wagons_separated_old, current);
+        }
+        else if(counter%2==1)
+        {
+          total_capacity_new_train += current->capacity;
+          total_busy_seats_new_train += current->busy_seats;
+          list_separated_wagons_append(list_wagons_separated_new, current);
+        }
+        counter++;
+      };
+      // train_print(train_traveling);
+      // train_print(new_train_separated);
+      // list_wagons_print(list_wagons_separated_old);
+      // printf("\n");
+      // list_wagons_print(list_wagons_separated_new);
+      // printf("\n");
 
 
+      list_wagons_separated_old->tail->next=NULL;
+      list_wagons_separated_new->tail->next=NULL;
+
+      // list_wagons_print(list_wagons_separated_old);
+      // printf("\n");
+      // list_wagons_print(list_wagons_separated_new);
+      // printf("\n");
+
+      List_Wagons* old_wagon_list = train_traveling->wagons;
+      old_wagon_list->head=NULL;
+      old_wagon_list->tail=NULL;
+      // TEngo que destruir esta lista de Vagones
+
+      train_traveling->wagons=list_wagons_separated_old;
+      train_traveling->total_busy_seats = total_busy_seats_old_train;
+      train_traveling->total_capacity = total_capacity_old_train;
+      // train_print(train_traveling);
+      // train_print(new_train_separated);
+
+      List_Wagons* old_wagon_list_new_train = new_train_separated->wagons;
+      // TENGO QUE DESTRUIR ESTA LISTA DE VAGONES
+
+      new_train_separated->wagons=list_wagons_separated_new;
+      new_train_separated->total_busy_seats = total_busy_seats_new_train;
+      new_train_separated->total_capacity = total_capacity_new_train;
+
+      LLegar_function(output_file,stations,train_traveling,train_traveling->n_station,train_traveling->n_platform,passengers_to_destroy);
+      LLegar_function(output_file,stations,new_train_separated,new_train_separated->n_station,new_train_separated->n_platform,passengers_to_destroy);
 
 
     }
