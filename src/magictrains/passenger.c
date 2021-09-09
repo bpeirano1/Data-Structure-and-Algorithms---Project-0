@@ -91,3 +91,17 @@ Passenger* list_passenger_pop(List_Passengers* list){
     printf("Lista de pasajeros esta vacía");
   };
 };
+
+void list__errase_passengers_append(List_Passengers* list, Passenger* node){
+  // Si la lista está vacía entonces queda como el primer elemento
+  if(list -> head == NULL)
+  {
+    list -> head = node;
+  }
+  // Sino, se pone como el siguiente del ultimo
+  else
+  {
+    list -> tail -> next = node;
+  }
+  // Luego se deja a este nodo como el último
+  list -> tail = node;};

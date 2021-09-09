@@ -119,6 +119,7 @@ void list_wagons_destroy(List_Wagons* list)
 void wagon_add_person(Wagon* wagon ,Passenger* passenger, int train_id){
 
   int asiento_encontrado = 0;
+  
 
   for (int i=0; i < wagon -> capacity; i++){
     if (!wagon->seats[i]->in_seat && !asiento_encontrado){

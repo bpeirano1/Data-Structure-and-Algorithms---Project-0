@@ -45,3 +45,5 @@ void list_passengers_print(List_Passengers* list);
 void list_passengers_destroy(List_Passengers* list);
 // list para poder sacar el primer elemento de la lista
 Passenger* list_passenger_pop(List_Passengers* list);
+
+void list__errase_passengers_append(List_Passengers* list, Passenger* node);
