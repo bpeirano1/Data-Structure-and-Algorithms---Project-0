@@ -57,5 +57,5 @@ void platforms_free(Platform** self, int NPlatform){
         train_free(self[id]->train);
         free(self[id]);
     };
-    // free(self);
+    free(self);
 };

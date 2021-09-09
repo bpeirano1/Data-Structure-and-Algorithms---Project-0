@@ -249,7 +249,6 @@ int main(int argc, char **argv)
         printf("No hay una personan en el asiento a remover en el caso REMOVER %d %d %d %d\n",station_id, platform_id, car, seat);
         printf("Debuggeo Train: %i asientos ocupados tren: %i/%i , Vagon: %i asientos ocupados %i/%i,\n", train_selected->id,train_selected->total_busy_seats,train_selected->total_capacity,current->id,current->busy_seats,current->capacity);
         train_print(train_selected);
-
     }
     }
     else if (string_equals(command, "SALIR"))
