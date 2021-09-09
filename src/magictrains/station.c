@@ -43,5 +43,5 @@ void stations_free(Station** self, int NStation){
         platforms_free(self[id]->platforms,self[id]->n_platform);
         free(self[id]);
     };
-    free(self);
+    // free(self);
 };

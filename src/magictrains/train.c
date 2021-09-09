@@ -33,7 +33,11 @@ void train_print(Train* self){
 
 // Para liberar memoria
 void train_free(Train* self){
-    free(self);
+    if (self)
+    {
+        list_wagons_destroy(self->wagons);
+        free(self);
+    }
 };
 
 void train_add_passenger(Train* train, Passenger* passenger){

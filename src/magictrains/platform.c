@@ -52,7 +52,10 @@ void passengers_queue_fprint(List_Passengers* list, FILE* output_file){
 
 void platforms_free(Platform** self, int NPlatform){
     for (int id=0; id<NPlatform; id++){
+        list_passengers_destroy(self[id]->passengers_queue_normal);
+        list_passengers_destroy(self[id]->passengers_queue_premium);
+        train_free(self[id]->train);
         free(self[id]);
     };
-    free(self);
+    // free(self);
 };

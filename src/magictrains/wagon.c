@@ -101,10 +101,36 @@ void list_wagons_destroy(List_Wagons* list)
     Wagon* curr = list -> head -> next;
     Wagon* prev = list -> head;
 
+    for (int i = 0; i < prev->capacity; i++)
+    {
+      if (!prev->seats[i]->next)
+      {
+        free(prev->seats[i]);
+      }
+      else{
+        printf("problema con asiento, ya que tiene un next en vez de ser null");
+      }
+    }
+    free(prev->seats);
+
+    
+
     while(curr)
     {
       free(prev);
       prev = curr;
+      for (int i = 0; i < prev->capacity; i++)
+      {
+        if (!prev->seats[i]->next)
+        {
+          free(prev->seats[i]);
+        }
+        else{
+          printf("problema con asiento, ya que tiene un next en vez de ser null");
+        }
+      }
+      free(prev->seats);
+      
       curr = curr -> next;
     }
     free(prev);

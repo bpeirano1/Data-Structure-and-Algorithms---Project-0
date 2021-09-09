@@ -284,48 +284,16 @@ int main(int argc, char **argv)
       fscanf(input_file, "%d %d", &station_id, &platform_id);
 
       LLegar_function (output_file,stations,train_traveling,station_id,platform_id,passengers_to_destroy);
-      // fprintf(output_file,"LLEGAR ");
-      // train_fprint(train_traveling, output_file);
-
-      // for(Wagon* current = train_traveling->wagons-> head; current; current = current -> next)
-      // {
-      //   for (int i = 0; i < current->capacity; i++)
-      //   {
-      //     if (current->seats[i]->in_seat && current->seats[i]->destiny == station_id)
-      //     {
-      //       current->seats[i]->in_seat=0;
-      //       current->seats[i]->id=0;
-      //       current->seats[i]->destiny=0;
-      //       current->seats[i]->category=0;
-      //       current->seats[i]->next = NULL;
-      //       current->busy_seats -= 1 ;
-      //       train_traveling->total_busy_seats -= 1;
-      //     }   
-      //   }        
-      //   };
-      //   List_Passengers* passengers_queue_premium = stations[station_id]->platforms[platform_id]->passengers_queue_premium;
-
-      //   while (passengers_queue_premium->head && train_traveling->total_busy_seats<train_traveling->total_capacity)
-      //   {
-      //     Passenger* passenger_pop = list_passenger_pop(passengers_queue_premium);
-      //     train_add_passenger(train_traveling, passenger_pop);
-      //     list__errase_passengers_append(passengers_to_destroy, passenger_pop);
-          
-      //   }
-      //   train_traveling->n_station = station_id;
-      //   train_traveling->n_platform = platform_id;
-
-      //   stations[station_id]->platforms[platform_id]->train=train_traveling;
 
     }
     else if (string_equals(command, "DESAPARECER"))
     {
       fprintf(output_file,"DESAPARECER ");
       train_fprint(train_traveling, output_file);
+      Train* train_to_destroy = train_traveling;
       train_traveling = NULL;
+      train_free(train_to_destroy);
       // TENGO QUE LIBERAR ESTE TREN
-
-
     }
     else if (string_equals(command, "SEPARAR"))
     {
@@ -372,35 +340,24 @@ int main(int argc, char **argv)
         }
         counter++;
       };
-      // train_print(train_traveling);
-      // train_print(new_train_separated);
-      // list_wagons_print(list_wagons_separated_old);
-      // printf("\n");
-      // list_wagons_print(list_wagons_separated_new);
-      // printf("\n");
-
 
       list_wagons_separated_old->tail->next=NULL;
       list_wagons_separated_new->tail->next=NULL;
 
-      // list_wagons_print(list_wagons_separated_old);
-      // printf("\n");
-      // list_wagons_print(list_wagons_separated_new);
-      // printf("\n");
-
       List_Wagons* old_wagon_list = train_traveling->wagons;
       old_wagon_list->head=NULL;
       old_wagon_list->tail=NULL;
-      // TEngo que destruir esta lista de Vagones
+      // Tengo que destruir esta lista de Vagones
+
+      list_wagons_destroy(old_wagon_list);
 
       train_traveling->wagons=list_wagons_separated_old;
       train_traveling->total_busy_seats = total_busy_seats_old_train;
       train_traveling->total_capacity = total_capacity_old_train;
-      // train_print(train_traveling);
-      // train_print(new_train_separated);
 
       List_Wagons* old_wagon_list_new_train = new_train_separated->wagons;
       // TENGO QUE DESTRUIR ESTA LISTA DE VAGONES
+      list_wagons_destroy(old_wagon_list_new_train);
 
       new_train_separated->wagons=list_wagons_separated_new;
       new_train_separated->total_busy_seats = total_busy_seats_new_train;
@@ -429,6 +386,7 @@ int main(int argc, char **argv)
   /*  [Por implementar] Liberamos nuestras estructuras */
   fclose(input_file);
   fclose(output_file);
+  list_passengers_destroy(passengers_to_destroy);
   stations_free(stations,N_STATIONS);
 
   return 0;
